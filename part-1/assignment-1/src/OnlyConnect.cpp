@@ -1,24 +1,29 @@
-/* File: OnlyConnect.cpp
- *
- * TODO: Edit these comments to describe anything interesting or noteworthy in your implementation.
- *
- * TODO: Edit these comments to leave a puzzle for your section leader to solve!
- */
+/* File: OnlyConnect.cpp */
 #include "OnlyConnect.h"
 #include "GUI/SimpleTest.h"
 using namespace std;
 
-string onlyConnectize(string phrase) {
-    /* TODO: The next few lines just exist to make sure you don't get compiler warning messages
-     * when this function isn't implemented. Delete these lines, then implement this function.
-     */
-    (void) phrase;
-    return "";
+/** Returns true if the character is a vowel, false otherwise. */
+bool isVowel(char ch) {
+    return stringContains("AEIOUY", toupper(ch));
 }
 
+/** Returns true if the character is a consonant, false otherwise. */
+bool isConsonant(char ch) {
+    return !isVowel(ch) && !isdigit(ch) && !ispunct(ch) && !isspace(ch);
+}
 
+string onlyConnectize(string phrase) {
+    if (phrase.empty()) {
+        return "";
+    }
 
-
+    char ch = toupper(phrase[0]);
+    if (isConsonant(ch)) {
+        return ch + onlyConnectize(phrase.erase(0, 1));
+    }
+    return onlyConnectize(phrase.erase(0, 1));
+}
 
 
 /* * * * * * Provided Test Cases * * * * * */
@@ -39,9 +44,22 @@ PROVIDED_TEST("Handles single-character inputs.") {
     EXPECT_EQUAL(onlyConnectize("Q"), "Q");
 }
 
-/* TODO: You will need to add your own tests into this suite of test cases. Think about the sorts
- * of inputs we tested here, and, importantly, what sorts of inputs we *didn't* test here. Some
- * general rules of testing:
+STUDENT_TEST("Handles empty and blank inputs.") {
+    EXPECT_EQUAL(onlyConnectize(""), "");
+    EXPECT_EQUAL(onlyConnectize("     "), "");
+}
+
+STUDENT_TEST("Handles input with leading and trailing blanks.") {
+    EXPECT_EQUAL(onlyConnectize("   Text   "), "TXT");
+    EXPECT_EQUAL(onlyConnectize("   AEIOUY   "), "");
+}
+
+STUDENT_TEST("Handles mixed case and characters.") {
+    EXPECT_EQUAL(onlyConnectize("1337@H4CK3RS.X"), "HCKRSX");
+    EXPECT_EQUAL(onlyConnectize("!Is,tHiS-.aN*InPuT!?"), "STHSNNPT");
+}
+
+/* Some general rules of testing:
  *
  *    1. Try extreme cases. What are some very large cases to check? What are some very small cases?
  *
@@ -53,9 +71,3 @@ PROVIDED_TEST("Handles single-character inputs.") {
  *
  * Happy testing!
  */
-
-
-
-
-
-
